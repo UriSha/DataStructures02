@@ -33,21 +33,24 @@ public class FibonacciHeap
      */
     public HeapNode insert(int key)
     {
+        // create new HeapNode
         String temp = "tempString";
         HeapNode toBeInserted = new HeapNode(temp, key);
 
-
+        // insert the new HeapNode 'behind' the minNode
         HeapNode minPrev = this.min.prev;
         minPrev.next = toBeInserted;
         toBeInserted.prev = minPrev;
         this.min.prev = toBeInserted;
         toBeInserted.next = this.min;
+
+
+        // update the relevant fields.
         this.size++;
+        this.counterRep[0]++;
         if (toBeInserted.key < this.min.key){
             this.min = toBeInserted;
         }
-
-
         return toBeInserted; //TODO
     }
 
