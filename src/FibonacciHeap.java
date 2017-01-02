@@ -86,7 +86,38 @@ public class FibonacciHeap
      */
     public void meld (FibonacciHeap heap2)
     {
-        return; // should be replaced by student code
+        // if one of the heaps is empty
+        if (heap2.empty()){
+            return;
+        }
+        else if (this.empty()){
+            this.min = heap2.min;
+            this.size = heap2.size;
+            this.numOfMarked = heap2.numOfMarked;
+            this.numOfTrees = heap2.numOfTrees;
+            this.counterRep = heap2.counterRep;
+            return;
+        }
+
+
+        //link the two lists together
+        HeapNode minPrev = this.min.prev;
+        minPrev.next = heap2.min.next;
+        heap2.min.next.prev = minPrev;
+        this.min.prev = heap2.min;
+        heap2.min.next = this.min;
+
+        // update the fields
+        if (heap2.min.key < this.min.key){
+            this.min = heap2.min;
+        }
+
+        this.size += heap2.size;
+        this.numOfTrees += heap2.numOfTrees;
+        this.numOfMarked += heap2.numOfMarked;
+        for (int i=0 ; i< this.counterRep.length ; i++){ //TODO is this counts as O(1)?
+            this.counterRep[i] += heap2.counterRep[i];
+        }
     }
 
     /**
@@ -121,6 +152,18 @@ public class FibonacciHeap
      */
     public void arrayToHeap(int[] array)
     {
+        // restart all the Heap fields
+        this.min = null;
+        this.size = 0;
+        this.numOfTrees = 0;
+        this.numOfMarked = 0;
+        this.counterRep = new int[42]; //TODO is this counts as O(1)?
+
+        // for every int in the array, make it a new HeapNode and insert it to the heap
+        for (int key : array){
+            this.insert(key);
+        }
+
         return; //	 to be replaced by student code
     }
 
