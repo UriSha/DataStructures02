@@ -5,7 +5,13 @@
  */
 public class FibonacciHeap
 {
-
+    private HeapNode min;
+    private int size;
+    private int numOfMarked;
+    private int numOfTrees;
+    private int[] counterRep;
+    private static int totalLinks;
+    private static int totalCuts;
     /**
      * public boolean empty()
      *
@@ -17,7 +23,7 @@ public class FibonacciHeap
      */
     public boolean empty()
     {
-        return false; // should be replaced by student code
+        return this.min == null ; // should be replaced by student code
     }
 
     /**
@@ -27,7 +33,19 @@ public class FibonacciHeap
      */
     public HeapNode insert(int key)
     {
-        return new HeapNode(); // should be replaced by student code
+        String temp = "tempString";
+        HeapNode toBeInserted = new HeapNode(temp, key);
+        HeapNode minPrev = this.min.prev;
+        minPrev.next = toBeInserted;
+        toBeInserted.prev = minPrev;
+        this.min.prev = toBeInserted;
+        toBeInserted.next = this.min;
+        this.size++;
+        if (toBeInserted.key < this.min.key){
+            this.min = toBeInserted;
+        }
+
+        return toBeInserted; //TODO
     }
 
     /**
@@ -165,6 +183,23 @@ public class FibonacciHeap
      *
      */
     public class HeapNode{
+
+        private String info;
+        private int key;
+        private int rank;
+        private boolean mark;
+        private HeapNode child;
+        private HeapNode next;
+        private HeapNode prev;
+        private HeapNode parent;
+
+
+        public HeapNode(String newInfo, int newKey){
+            this.info = newInfo;
+            this.key = newKey;
+        }
+
+
 
     }
 }
