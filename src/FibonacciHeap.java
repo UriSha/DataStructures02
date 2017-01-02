@@ -35,6 +35,8 @@ public class FibonacciHeap
     {
         String temp = "tempString";
         HeapNode toBeInserted = new HeapNode(temp, key);
+
+
         HeapNode minPrev = this.min.prev;
         minPrev.next = toBeInserted;
         toBeInserted.prev = minPrev;
@@ -44,6 +46,7 @@ public class FibonacciHeap
         if (toBeInserted.key < this.min.key){
             this.min = toBeInserted;
         }
+
 
         return toBeInserted; //TODO
     }
