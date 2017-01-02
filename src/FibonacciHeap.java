@@ -9,7 +9,7 @@ public class FibonacciHeap
     private int size;
     private int numOfMarked;
     private int numOfTrees;
-    private int[] counterRep;
+    private int[] counterRep = new int[42];
     private static int totalLinks;
     private static int totalCuts;
     /**
@@ -23,7 +23,7 @@ public class FibonacciHeap
      */
     public boolean empty()
     {
-        return this.min == null ; // should be replaced by student code
+        return this.min == null ;
     }
 
     /**
@@ -33,7 +33,7 @@ public class FibonacciHeap
      */
     public HeapNode insert(int key)
     {
-        // create new HeapNode
+        // create new HeapNode //TODO is there suppose to be an info input?
         String temp = "tempString";
         HeapNode toBeInserted = new HeapNode(temp, key);
 
@@ -49,10 +49,10 @@ public class FibonacciHeap
         this.size++;
         this.numOfTrees++;
         this.counterRep[0]++;
-        if (toBeInserted.key < this.min.key){
+        if (toBeInserted.key < this.min.key){ //TODO what about duplicates?
             this.min = toBeInserted;
         }
-        return toBeInserted; //TODO
+        return toBeInserted;
     }
 
     /**
@@ -75,7 +75,7 @@ public class FibonacciHeap
      */
     public HeapNode findMin()
     {
-        return new HeapNode();// should be replaced by student code
+        return this.min; // if the Heap is empty will return null
     }
 
     /**
@@ -97,7 +97,7 @@ public class FibonacciHeap
      */
     public int size()
     {
-        return 0; // should be replaced by student code
+        return this.size; // should be replaced by student code
     }
 
     /**
@@ -108,8 +108,9 @@ public class FibonacciHeap
      */
     public int[] countersRep()
     {
-        int[] arr = new int[42];
-        return arr; //	 to be replaced by student code
+//        int[] arr = new int[42];
+//        return arr; //	 to be replaced by student code
+        return this.counterRep;
     }
 
     /**
@@ -154,7 +155,7 @@ public class FibonacciHeap
      */
     public int potential()
     {
-        return 0; // should be replaced by student code
+        return this.numOfTrees + 2*this.numOfMarked;
     }
 
     /**
@@ -167,7 +168,7 @@ public class FibonacciHeap
      */
     public static int totalLinks()
     {
-        return 0; // should be replaced by student code
+        return totalLinks;
     }
 
     /**
@@ -178,7 +179,7 @@ public class FibonacciHeap
      */
     public static int totalCuts()
     {
-        return 0; // should be replaced by student code
+        return totalCuts;
     }
 
     /**
@@ -204,6 +205,8 @@ public class FibonacciHeap
         public HeapNode(String newInfo, int newKey){
             this.info = newInfo;
             this.key = newKey;
+            this.next = this;
+            this.prev = this;
         }
 
 
