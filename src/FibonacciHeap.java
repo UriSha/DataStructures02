@@ -38,11 +38,12 @@ public class FibonacciHeap
         HeapNode toBeInserted = new HeapNode(temp, key);
 
         // insert the new HeapNode 'behind' the minNode
-        HeapNode minPrev = this.min.prev;
-        minPrev.next = toBeInserted;
-        toBeInserted.prev = minPrev;
-        this.min.prev = toBeInserted;
-        toBeInserted.next = this.min;
+        insertNodeToRootsList(toBeInserted);
+//        HeapNode minPrev = this.min.prev;
+//        minPrev.next = toBeInserted;
+//        toBeInserted.prev = minPrev;
+//        this.min.prev = toBeInserted;
+//        toBeInserted.next = this.min;
 
 
         // update the relevant fields
@@ -55,6 +56,13 @@ public class FibonacciHeap
         return toBeInserted;
     }
 
+    private void insertNodeToRootsList(HeapNode node){
+        HeapNode minPrev = this.min.prev;
+        minPrev.next = node;
+        node.prev = minPrev;
+        this.min.prev = node;
+        node.next = this.min;
+    }
     /**
      * public void deleteMin()
      *
@@ -63,8 +71,40 @@ public class FibonacciHeap
      */
     public void deleteMin()
     {
-        return; // should be replaced by student code
 
+        int tempNumOfTrees = this.min.rank;
+        this.counterRep[this.min.rank]--;
+        int[] tempCounterRep = new int[42];
+
+
+        HeapNode childOfMin = this.min.child;
+        HeapNode brother = childOfMin;
+        HeapNode currentMin = childOfMin;
+
+
+        do {
+            if (brother.key < currentMin.key){
+                currentMin = brother;
+            }
+            brother.parent = null;
+            tempCounterRep[brother.rank]++;
+            if (brother.mark){
+                brother.mark = false;
+                this.numOfMarked--;
+            }
+            brother = brother.next;
+        }while (brother != childOfMin);
+
+        FibonacciHeap tempHeap = new FibonacciHeap();
+        tempHeap.min = currentMin;
+//        tempHeap.size = 0;
+//        tempHeap.numOfMarked = 0;
+        tempHeap.numOfTrees = tempNumOfTrees;
+        tempHeap.counterRep = tempCounterRep;
+
+        this.meld((tempHeap));
+
+        this.successiveLinking();
     }
 
     /**
@@ -186,8 +226,50 @@ public class FibonacciHeap
      */
     public void decreaseKey(HeapNode x, int delta)
     {
+        x.key -= delta;
+        if (x.parent == null || x.key < x.parent.key){ //TODO what should we do if they are equal?
+            return;
+        }
+        cascadingCut(x, x.parent);
+
         return; // should be replaced by student code
     }
+
+    private void cascadingCut(HeapNode child, HeapNode parent){
+        cut(child, parent);
+        if (parent.parent != null){
+            if (!parent.mark){
+                parent.mark = true;
+                this.numOfMarked++;
+            }
+            else {
+                cascadingCut(parent, parent.parent);
+            }
+        }
+        else { // the case where parent is the root of the current tree
+            this.counterRep[parent.rank]--;
+            this.counterRep[parent.rank-1]++;
+        }
+    }
+
+    private void cut(HeapNode child, HeapNode parent){
+        child.parent = null;
+        if (child.mark) {this.numOfMarked--;}
+        child.mark = false;
+        parent.rank--;
+        if (child.next == child){
+            parent.child = null;
+        }
+        else {
+            parent.child = child.next;
+            child.prev.next = child.next;
+            child.next.prev = child.prev;
+        }
+        insertNodeToRootsList(child);
+        this.numOfTrees++;
+        this.counterRep[child.rank]++;
+    }
+
 
     /**
      * public int potential()
