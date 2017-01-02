@@ -102,7 +102,7 @@ public class FibonacciHeap
         tempHeap.numOfTrees = tempNumOfTrees;
         tempHeap.counterRep = tempCounterRep;
 
-        this.meld((tempHeap));
+        this.meld((tempHeap)); //TODO we still didn't delete the min!!
 
         this.successiveLinking();
     }
