@@ -45,8 +45,9 @@ public class FibonacciHeap
         toBeInserted.next = this.min;
 
 
-        // update the relevant fields.
+        // update the relevant fields
         this.size++;
+        this.numOfTrees++;
         this.counterRep[0]++;
         if (toBeInserted.key < this.min.key){
             this.min = toBeInserted;
