@@ -37,14 +37,18 @@ public class FibonacciHeap
         String temp = "tempString";
         HeapNode toBeInserted = new HeapNode(temp, key);
 
-        // insert the new HeapNode 'behind' the minNode
-        insertNodeToRootsList(toBeInserted);
+        if (this.empty()){
+            this.min = toBeInserted;
+        }
+        else {
+            // insert the new HeapNode 'behind' the minNode
+            insertNodeToRootsList(toBeInserted);  //TODO what about if the Heap is empty?
 //        HeapNode minPrev = this.min.prev;
 //        minPrev.next = toBeInserted;
 //        toBeInserted.prev = minPrev;
 //        this.min.prev = toBeInserted;
 //        toBeInserted.next = this.min;
-
+        }
 
         // update the relevant fields
         this.size++;
@@ -334,7 +338,12 @@ public class FibonacciHeap
             this.prev = this;
         }
 
+        public String toString(){
+            return "(" + this.key + ", " + this.info + ")";
+        }
 
-
+        public int getKey(){
+            return this.key;
+        }
     }
 }
