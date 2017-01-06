@@ -9,8 +9,8 @@ public class FibonacciHeap
 {
     private HeapNode min;
     private int size;
-    private int numOfMarked;
-    private int numOfTrees;
+    public int numOfMarked; //TODO
+    public int numOfTrees;//TODO
     private int[] counterRep = new int[42];
     private static int totalLinks;
     private static int totalCuts;
@@ -371,7 +371,10 @@ public class FibonacciHeap
     public void decreaseKey(HeapNode x, int delta)
     {
         x.key -= delta;
-        if (x.parent == null || x.key < x.parent.key){ //TODO what should we do if they are equal?
+        if (x.parent == null || x.key > x.parent.key){ //TODO what should we do if they are equal?
+            if (x.key < this.min.key){
+                this.min = x;
+            }
             return;
         }
         cascadingCut(x, x.parent);
