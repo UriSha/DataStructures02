@@ -4,7 +4,23 @@ public class FibonacciHeapTester {
         FibonacciHeap fibHeap = new FibonacciHeap();
         fibHeap.insert(5);
         fibHeap.insert(9);
+        fibHeap.insert(10);
         fibHeap.deleteMin();
+        fibHeap.deleteMin();
+        fibHeap.insert(1);
+        fibHeap.insert(20);
+        fibHeap.insert(13);
+        fibHeap.insert(12);
+        fibHeap.insert(70);
+        fibHeap.deleteMin();
+        fibHeap.insert(36);
+        fibHeap.insert(200);
+
+        fibHeap.deleteMin();
+        fibHeap.deleteMin();
+
+
+
 
         System.out.println(fibHeap.findMin());
 //        if (fibHeap.findMin().getKey() != 5){

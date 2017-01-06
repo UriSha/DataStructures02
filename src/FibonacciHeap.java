@@ -44,7 +44,7 @@ public class FibonacciHeap
         }
         else {
             // insert the new HeapNode 'behind' the minNode
-            insertNodeToRootsList(toBeInserted);  //TODO what about if the Heap is empty?
+            insertNodeToOthersList(toBeInserted, this.min);  //TODO what about if the Heap is empty?
 //        HeapNode minPrev = this.min.prev;
 //        minPrev.next = toBeInserted;
 //        toBeInserted.prev = minPrev;
@@ -62,12 +62,18 @@ public class FibonacciHeap
         return toBeInserted;
     }
 
-    private void insertNodeToRootsList(HeapNode node){
-        HeapNode minPrev = this.min.prev;
-        minPrev.next = node;
-        node.prev = minPrev;
-        this.min.prev = node;
-        node.next = this.min;
+    /**
+     * public void insertNodeToOthersList()
+     *
+     * @pre node and other are both not null
+     *
+     */
+    private void insertNodeToOthersList(HeapNode node, HeapNode other){
+        HeapNode otherPrev = other.prev;
+        otherPrev.next = node;
+        node.prev = otherPrev;
+        other.prev = node;
+        node.next = other;
     }
     /**
      * public void deleteMin()
@@ -169,13 +175,22 @@ public class FibonacciHeap
     public HeapNode link(HeapNode big, HeapNode small)
     {
         if (big.key < small.key){ //TODO what about duplicates?
-            link(small, big);
+            HeapNode temp = big;
+            big = small;
+            small = temp;
         }
-        small.next = big.child;
-        big.child = small;
-        big.rank++;
+        if (small.child==null) {
+            big.next = big;
+            big.prev = big;
+        }
+        else{
+            insertNodeToOthersList(big, small.child);
+        }
+        big.parent = small;
+        small.child = big;
+        small.rank++;
         totalLinks++;
-        return big;
+        return small;
     }
     /**
      *
@@ -226,7 +241,7 @@ public class FibonacciHeap
                     this.min.prev = this.min;
                 }
                 else {
-                    insertNodeToRootsList(heap);
+                    insertNodeToOthersList(heap, this.min);
                     if (heap.key < this.min.key){
                         this.min = heap;
                     }
@@ -394,7 +409,7 @@ public class FibonacciHeap
             child.prev.next = child.next;
             child.next.prev = child.prev;
         }
-        insertNodeToRootsList(child);
+        insertNodeToOthersList(child, this.min);
         this.numOfTrees++;
         this.counterRep[child.rank]++;
         totalCuts++;
