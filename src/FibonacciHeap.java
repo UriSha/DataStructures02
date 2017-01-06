@@ -1,3 +1,5 @@
+import java.util.InputMismatchException;
+
 /**
  * FibonacciHeap
  *
@@ -140,14 +142,97 @@ public class FibonacciHeap
         this.min.next.prev = this.min.prev;
         HeapNode tempMin = this.min.next;
         this.min.clear();
-        this.min = tempMin;
+//        this.min = tempMin;
         this.size--;
 
-        this.successiveLinking();
+        successiveLinking(tempMin);
     }
 
-    public void successiveLinking(){
+    public void successiveLinking(HeapNode node)
+    //TODO check if marked, unmark all and update numOfMarked.
+    // TODO parent = null for all roots
 
+     //tobuckets:
+    // TODO find new min
+    {
+        HeapNode[] buckets = toBuckets(node);
+        fromBuckets(buckets);
+    }
+
+
+
+    /**
+     *
+     * @pre big and small are both unmarked
+     *
+     */
+    public HeapNode link(HeapNode big, HeapNode small)
+    {
+        if (big.key < small.key){ //TODO what about duplicates?
+            link(small, big);
+        }
+        small.next = big.child;
+        big.child = small;
+        big.rank++;
+        totalLinks++;
+        return big;
+    }
+    /**
+     *
+     * @pre Node is in roots list
+     *
+     */
+    public HeapNode[] toBuckets(HeapNode node)
+    {
+        HeapNode[] buckets = new HeapNode[(int)(Math.log(this.size)/Math.log(2))+1];
+        node.prev.next = null;
+        HeapNode brother;
+        while (node != null){
+            brother = node;
+            node = node.next;
+
+            // if brother is marked, unmark it and update counter
+            if (brother.mark){
+                brother.mark = false;
+                this.numOfMarked--;
+            }
+
+            //a node from root list has no parent
+            brother.parent = null;
+
+
+            while(buckets[brother.rank]!= null){
+                brother = link(brother, buckets[brother.rank]);
+                buckets[brother.rank-1] = null;
+            }
+            buckets[brother.rank] = brother;
+
+        }
+        this.numOfTrees = 0;
+        this.counterRep = new int[42];
+        return buckets;
+    }
+
+    public void fromBuckets(HeapNode[] buckets)
+    {
+        this.min = null;
+        for (HeapNode heap : buckets){
+            if (heap != null){
+                this.counterRep[heap.rank]++;
+                this.numOfTrees++;
+                if (this.min ==null){ //the first heap we find in buckets
+                    this.min = heap;
+                    this.min.next = this.min;
+                    this.min.prev = this.min;
+                }
+                else {
+                    insertNodeToRootsList(heap);
+                    if (heap.key < this.min.key){
+                        this.min = heap;
+                    }
+                }
+            }
+        }
     }
     /**
      * public HeapNode findMin()
@@ -257,7 +342,9 @@ public class FibonacciHeap
      */
     public void delete(HeapNode x)
     {
-        return; // should be replaced by student code
+        int delta = x.getKey() - this.min.getKey();
+        decreaseKey(x, delta+1);
+        deleteMin();
     }
 
     /**
@@ -310,6 +397,7 @@ public class FibonacciHeap
         insertNodeToRootsList(child);
         this.numOfTrees++;
         this.counterRep[child.rank]++;
+        totalCuts++;
     }
 
 
