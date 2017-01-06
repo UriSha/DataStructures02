@@ -73,44 +73,82 @@ public class FibonacciHeap
      * Delete the node containing the minimum key.
      *
      */
+//    public void deleteMin()
+//    {
+
+//        int tempNumOfTrees = this.min.rank;
+//        this.counterRep[this.min.rank]--;
+//        int[] tempCounterRep = new int[42];
+//
+//
+//        HeapNode childOfMin = this.min.child;
+//        HeapNode brother = childOfMin;
+//        HeapNode currentMin = childOfMin;
+//
+//
+//        do {
+//            if (brother.key < currentMin.key){
+//                currentMin = brother;
+//            }
+//            brother.parent = null;
+//            tempCounterRep[brother.rank]++;
+//            if (brother.mark){
+//                brother.mark = false;
+//                this.numOfMarked--;
+//            }
+//            brother = brother.next;
+//        }while (brother != childOfMin);
+//
+//        FibonacciHeap tempHeap = new FibonacciHeap();
+//        tempHeap.min = currentMin;
+////        tempHeap.size = 0;
+////        tempHeap.numOfMarked = 0;
+//        tempHeap.numOfTrees = tempNumOfTrees;
+//        tempHeap.counterRep = tempCounterRep;
+//
+//        this.meld((tempHeap)); //TODO we still didn't delete the min!!
+//
+////        this.successiveLinking();
+//    }
     public void deleteMin()
     {
+        //Heap is empty
+        if (this.empty()){return;}
+        if (this.size == 1){
+            this.min.clear();
+            this.min = null;
+            this.size--;
+            this.numOfTrees--;
+            this.counterRep[0]--;
+            return;
+        }
 
-        int tempNumOfTrees = this.min.rank;
-        this.counterRep[this.min.rank]--;
-        int[] tempCounterRep = new int[42];
+        HeapNode minChild = this.min.child;
 
+        //min has kids
+        if (minChild!=null){
+            //link the two lists together
+            HeapNode minPrev = this.min.prev;
+            minPrev.next = minChild.next;
+            minChild.next.prev = minPrev;
+            this.min.prev = minChild;
+            minChild.next = this.min;
+        }
 
-        HeapNode childOfMin = this.min.child;
-        HeapNode brother = childOfMin;
-        HeapNode currentMin = childOfMin;
-
-
-        do {
-            if (brother.key < currentMin.key){
-                currentMin = brother;
-            }
-            brother.parent = null;
-            tempCounterRep[brother.rank]++;
-            if (brother.mark){
-                brother.mark = false;
-                this.numOfMarked--;
-            }
-            brother = brother.next;
-        }while (brother != childOfMin);
-
-        FibonacciHeap tempHeap = new FibonacciHeap();
-        tempHeap.min = currentMin;
-//        tempHeap.size = 0;
-//        tempHeap.numOfMarked = 0;
-        tempHeap.numOfTrees = tempNumOfTrees;
-        tempHeap.counterRep = tempCounterRep;
-
-        this.meld((tempHeap)); //TODO we still didn't delete the min!!
+        //remove min from root list
+        this.min.prev.next = this.min.next;
+        this.min.next.prev = this.min.prev;
+        HeapNode tempMin = this.min.next;
+        this.min.clear();
+        this.min = tempMin;
+        this.size--;
 
         this.successiveLinking();
     }
 
+    public void successiveLinking(){
+
+    }
     /**
      * public HeapNode findMin()
      *
@@ -336,6 +374,13 @@ public class FibonacciHeap
             this.key = newKey;
             this.next = this;
             this.prev = this;
+        }
+
+        public void clear(){
+            this.next = null;
+            this.prev = null;
+            this.child = null;
+            this.parent = null;
         }
 
         public String toString(){
