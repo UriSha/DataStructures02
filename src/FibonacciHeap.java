@@ -12,8 +12,8 @@ public class FibonacciHeap
     public int numOfMarked; //TODO
     public int numOfTrees;//TODO
     private int[] counterRep = new int[42];
-    private static int totalLinks;
-    private static int totalCuts;
+    public static int totalLinks;
+    public static int totalCuts;
     /**
      * public boolean empty()
      *
@@ -266,7 +266,7 @@ public class FibonacciHeap
      * Meld the heap with heap2
      *
      */
-    public void meld (FibonacciHeap heap2)
+    public void meld (FibonacciHeap heap2) //TODO should we make heap2 pointers same as this's?
     {
         // if one of the heaps is empty
         if (heap2.empty()){
@@ -468,14 +468,14 @@ public class FibonacciHeap
      */
     public class HeapNode{
 
-        private String info;
-        private int key;
-        private int rank;
-        private boolean mark;
-        private HeapNode child;
-        private HeapNode next;
-        private HeapNode prev;
-        private HeapNode parent;
+        public String info;
+        public int key;
+        public int rank;
+        public boolean mark;
+        public HeapNode child;
+        public HeapNode next;
+        public HeapNode prev;
+        public HeapNode parent;
 
 
         public HeapNode(String newInfo, int newKey){
