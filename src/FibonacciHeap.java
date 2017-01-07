@@ -413,6 +413,9 @@ public class FibonacciHeap
             child.next.prev = child.prev;
         }
         insertNodeToOthersList(child, this.min);
+        if (child.key < this.min.key){
+            this.min = child;
+        }
         this.numOfTrees++;
         this.counterRep[child.rank]++;
         totalCuts++;

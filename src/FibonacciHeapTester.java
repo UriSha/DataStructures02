@@ -27,11 +27,41 @@ public class FibonacciHeapTester {
         System.out.println("numOfMarked: "+fibHeap.numOfMarked);
         System.out.println(fibHeap.findMin());
 
-        fibHeap.decreaseKey(seventy, 48);
-        System.out.println("==============");
-        System.out.println("numOfTrees: "+fibHeap.numOfTrees);
+//        fibHeap.decreaseKey(seventy, 48);
+//        System.out.println("==============");
+//        System.out.println("numOfTrees: "+fibHeap.numOfTrees);
+//        System.out.println("numOfMarked: "+fibHeap.numOfMarked);
+//        System.out.println(fibHeap.findMin());
+
+        for (int i = 1 ; i<3; i++){
+            fibHeap.insert(i*100);
+        }
+        FibonacciHeap.HeapNode threeHundred = fibHeap.insert(300);
+        FibonacciHeap.HeapNode fourHundred = fibHeap.insert(400);
+        FibonacciHeap.HeapNode fiveHundred = fibHeap.insert(500);
+        for (int i = 6 ; i<9; i++){
+            fibHeap.insert(i*100);
+        }
+        fibHeap.deleteMin();
+        fibHeap.insert(900);
+        fibHeap.insert(1000);
+        fibHeap.deleteMin();
+        //PIC HERE
+
+        fibHeap.decreaseKey(fiveHundred, 445);
+        fibHeap.decreaseKey(threeHundred, 255);
+
+        System.out.println();
+        System.out.println("numOfTrees: "+ fibHeap.numOfTrees);
+        System.out.println("size: "+fibHeap.size());
         System.out.println("numOfMarked: "+fibHeap.numOfMarked);
-        System.out.println(fibHeap.findMin());
+        System.out.println("min: " + fibHeap.findMin());
+
+
+
+
+
+
 //        if (fibHeap.findMin().getKey() != 5){
 //            System.out.println("wrong min key. suppose to be 5, but it is " + fibHeap.findMin().getKey());
 //        }
