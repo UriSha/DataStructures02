@@ -207,7 +207,7 @@ public class FibonacciHeap
             node = node.next;
 
             // if brother is marked, unmark it and update counter
-            if (brother.mark){
+            if (brother.mark){  //TODO don't we need to do this in fromBuckets?????
                 brother.mark = false;
                 this.numOfMarked--;
             }
