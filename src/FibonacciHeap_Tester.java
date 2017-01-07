@@ -43,10 +43,10 @@ public class FibonacciHeap_Tester {
 		if(test_heap.findMin().key != 2){
 			System.out.println("Test case 1 - Error 3 : problem with deleteMin");
 		}
-		if(test_heap.findMin().nextNode.key != 6){
+		if(test_heap.findMin().next.key != 6){
 			System.out.println(String.format(
 					"Test case 1 - Error 4 : problem with deleteMin. Sibiling should be 6 but it is %s",
-					test_heap.findMin().nextNode.key));
+					test_heap.findMin().next.key));
 		}
 		if(test_heap.findMin().child.key != 4){
 			System.out.println(String.format(
@@ -58,10 +58,10 @@ public class FibonacciHeap_Tester {
 					"Test case 1 - Error 6 : problem with deleteMin. Left child child should be 5 but it is %s",
 					test_heap.findMin().child.child.key));
 		}
-		if(test_heap.findMin().child.nextNode.key != 3){
+		if(test_heap.findMin().child.next.key != 3){
 			System.out.println(String.format(
 					"Test case 1 - Error 7 : problem with deleteMin. Left child brother should be 3 but it is %s",
-					test_heap.findMin().child.nextNode.key));
+					test_heap.findMin().child.next.key));
 		}
 
 		if(test_heap.totalCuts() != 0){
@@ -94,12 +94,13 @@ public class FibonacciHeap_Tester {
 					"Test case 1 - Error 13 : problem with meld. min key should be 1 but it is %s",
 					test_heap2.findMin().key));
 		}
-		if(test_heap2.findMin().nextNode.key != 2){
+		if(test_heap2.findMin().next.key != 2){
 			System.out.println(String.format(
 					"Test case 1 - Error 14 : problem with meld. Sibiling should be 2 but it is %s",
-					test_heap2.findMin().nextNode.key));
-		}	
-		test_heap.delete(nodes_array[2]);
+					test_heap2.findMin().next.key));
+		}
+		System.out.println(test_heap.findMin());
+//		test_heap.delete(nodes_array[2]);
 		test_heap.delete(nodes_array[4]);
 		System.out.println("Test case 1 - Done! ");
 		
@@ -136,8 +137,8 @@ public class FibonacciHeap_Tester {
 				int repeat = 1000;
 				FibonacciHeap test_heap = new FibonacciHeap();
 				for(int i=1; i<3;i++){
-					FibonacciHeap.TotalCuts = 0;
-					FibonacciHeap.TotalLinks = 0;
+					FibonacciHeap.totalCuts = 0;
+					FibonacciHeap.totalLinks = 0;
 					long startTime = System.currentTimeMillis();
 					for(int repeatCounter = 0; repeatCounter<repeat;repeatCounter++){
 						test_heap = new FibonacciHeap();
@@ -205,29 +206,29 @@ public class FibonacciHeap_Tester {
 		System.out.println("deleteMin");
 		test_heap.deleteMin();
 		printHeap(test_heap);
-		System.out.println("total links:" + FibonacciHeap.TotalLinks);
-		System.out.println("total cuts:" + FibonacciHeap.TotalCuts);
-		System.out.println("number of marked:" + test_heap.NumberOfMarkedNodes);
+		System.out.println("total links:" + FibonacciHeap.totalLinks);
+		System.out.println("total cuts:" + FibonacciHeap.totalCuts);
+		System.out.println("number of marked:" + test_heap.numOfMarked);
 		System.out.println("decreaseKey 17->2");
 		test_heap.decreaseKey(nodes_array[16], 15);
 		printHeap(test_heap);
-		System.out.println("total cuts:" + FibonacciHeap.TotalCuts);
-		System.out.println("number of marked:" + test_heap.NumberOfMarkedNodes);
+		System.out.println("total cuts:" + FibonacciHeap.totalCuts);
+		System.out.println("number of marked:" + test_heap.numOfMarked);
 		System.out.println("decreaseKey 15->3");
 		test_heap.decreaseKey(nodes_array[14], 12);
 		printHeap(test_heap);
-		System.out.println("total cuts:" + FibonacciHeap.TotalCuts);
-		System.out.println("number of marked:" + test_heap.NumberOfMarkedNodes);
+		System.out.println("total cuts:" + FibonacciHeap.totalCuts);
+		System.out.println("number of marked:" + test_heap.numOfMarked);
 		System.out.println("decreaseKey 11->4");
 		test_heap.decreaseKey(nodes_array[10], 7);
 		printHeap(test_heap);
-		System.out.println("total cuts:" + FibonacciHeap.TotalCuts);
-		System.out.println("number of marked:" + test_heap.NumberOfMarkedNodes);
+		System.out.println("total cuts:" + FibonacciHeap.totalCuts);
+		System.out.println("number of marked:" + test_heap.numOfMarked);
 		System.out.println("decreaseKey 16->5");
 		test_heap.decreaseKey(nodes_array[15], 11);
 		printHeap(test_heap);
-		System.out.println("total cuts:" + FibonacciHeap.TotalCuts);
-		System.out.println("number of marked:" + test_heap.NumberOfMarkedNodes);
+		System.out.println("total cuts:" + FibonacciHeap.totalCuts);
+		System.out.println("number of marked:" + test_heap.numOfMarked);
 		
 	}
 	
@@ -237,7 +238,7 @@ public class FibonacciHeap_Tester {
 		do{
 			printNode(tempNode,0,0);
 			System.out.format("%n");
-			tempNode = tempNode.nextNode;
+			tempNode = tempNode.next;
 		}while(tempNode != heap.findMin());
 		
 	}
@@ -245,17 +246,17 @@ public class FibonacciHeap_Tester {
 		for(int i = lastLevel; i<level; i++){
 			System.out.print("	");
 		}
-		if(heapNode.isMarked){
+		if(heapNode.mark){
 			System.out.print(".");
 		}
 		System.out.print(heapNode.key);
 		if(heapNode.child!=null){
-			printNode(heapNode.child.prevNode,level,level+1);
-			FibonacciHeap.HeapNode tempNode = heapNode.child.prevNode.prevNode, firstNode = heapNode.child.prevNode;
+			printNode(heapNode.child.prev,level,level+1);
+			FibonacciHeap.HeapNode tempNode = heapNode.child.prev.prev, firstNode = heapNode.child.prev;
 			while(firstNode!=tempNode){
 				System.out.format("%n");
 				printNode(tempNode,0,level+1);
-				tempNode = tempNode.prevNode;
+				tempNode = tempNode.prev;
 			}
 		}
 	}
