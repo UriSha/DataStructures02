@@ -119,17 +119,25 @@ public class FibonacciHeap
         successiveLinking(tempMin);
     }
 
+    /**
+     * public void successiveLinking()
+     *
+     * @pre node is in this's roots list, and this.min is no longer in the list
+     * @post the heap has maximum of one tree per rank between 0 and log(n)
+     *
+     */
     public void successiveLinking(HeapNode node)
     {
         HeapNode[] buckets = toBuckets(node);
         fromBuckets(buckets);
     }
 
-
-
     /**
+     * public void link()
      *
      * @pre big and small are both unmarked
+     * @pre big and small are has the same rank
+     * @return the HeapNode with the smaller key, with the other HeapNode as it's child
      *
      */
     public HeapNode link(HeapNode big, HeapNode small)
@@ -152,9 +160,12 @@ public class FibonacciHeap
         totalLinks++;
         return small;
     }
+
     /**
+     * public void toBuckets()
      *
-     * @pre Node is in roots list
+     * @pre node is in roots list
+     * @return array containing maximum of one tree per rank between 0 and log(n)
      *
      */
     public HeapNode[] toBuckets(HeapNode node)
@@ -189,6 +200,15 @@ public class FibonacciHeap
         return buckets;
     }
 
+    /**
+     * public void fromBuckets()
+     *
+     * @pre  buckets contains maximum of one tree per rank between 0 and log(n)
+     * @pre this.numOfTrees == 0
+     * @pre this.min == null
+     * @post FibonacciHeap with maximum of one tree per rank between 0 and log(n)
+     *
+     */
     public void fromBuckets(HeapNode[] buckets)
     {
         for (HeapNode heap : buckets){
@@ -208,6 +228,7 @@ public class FibonacciHeap
             }
         }
     }
+
     /**
      * public HeapNode findMin()
      *
