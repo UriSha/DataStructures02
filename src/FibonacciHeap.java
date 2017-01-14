@@ -1,5 +1,4 @@
 import java.util.HashMap;
-import java.util.InputMismatchException;
 import java.util.Map;
 
 /**
@@ -36,9 +35,8 @@ public class FibonacciHeap
      */
     public HeapNode insert(int key)
     {
-        // create new HeapNode //TODO is there suppose to be an info input?
-        String temp = "tempString";
-        HeapNode toBeInserted = new HeapNode(temp, key);
+        // create new HeapNode
+        HeapNode toBeInserted = new HeapNode(key);
 
         if (this.empty()){
             this.min = toBeInserted;
@@ -51,7 +49,7 @@ public class FibonacciHeap
         // update the relevant fields
         this.size++;
         this.numOfTrees++;
-        if (toBeInserted.key < this.min.key){ //TODO what about duplicates?
+        if (toBeInserted.key <= this.min.key){
             this.min = toBeInserted;
         }
         return toBeInserted;
@@ -70,6 +68,21 @@ public class FibonacciHeap
         other.next = node;
         node.prev = other;
     }
+
+    /**
+     * public void combineTwoLists()
+     *
+     * @pre node and other are both not null
+     *
+     */
+    private void combineTwoLists(HeapNode node, HeapNode other) {
+        HeapNode nodePrev = node.prev;
+        nodePrev.next = other.next;
+        other.next.prev = nodePrev;
+        node.prev = other;
+        other.next = node;
+    }
+
     /**
      * public void deleteMin()
      *
@@ -93,11 +106,7 @@ public class FibonacciHeap
         //min has kids
         if (minChild!=null){
             //link the two lists together
-            HeapNode minPrev = this.min.prev;
-            minPrev.next = minChild.next;
-            minChild.next.prev = minPrev;
-            this.min.prev = minChild;
-            minChild.next = this.min;
+            combineTwoLists(this.min, minChild);
         }
 
         //remove min from root list
@@ -105,18 +114,12 @@ public class FibonacciHeap
         this.min.next.prev = this.min.prev;
         HeapNode tempMin = this.min.next;
         this.min.clear();
-//        this.min = tempMin;
         this.size--;
 
         successiveLinking(tempMin);
     }
 
     public void successiveLinking(HeapNode node)
-    //TODO check if marked, unmark all and update numOfMarked.
-    // TODO parent = null for all roots
-
-     //tobuckets:
-    // TODO find new min
     {
         HeapNode[] buckets = toBuckets(node);
         fromBuckets(buckets);
@@ -156,7 +159,7 @@ public class FibonacciHeap
      */
     public HeapNode[] toBuckets(HeapNode node)
     {
-        HeapNode[] buckets = new HeapNode[(int)(Math.log(this.size)/Math.log(2))+1];
+        HeapNode[] buckets = new HeapNode[(int)(Math.log(this.size)/Math.log(1.6)+1)];
         node.prev.next = null;
         HeapNode brother;
         while (node != null){
@@ -164,7 +167,7 @@ public class FibonacciHeap
             node = node.next;
 
             // if brother is marked, unmark it and update counter
-            if (brother.mark){  //TODO don't we need to do this in fromBuckets?????
+            if (brother.mark){
                 brother.mark = false;
                 this.numOfMarked--;
             }
@@ -172,21 +175,22 @@ public class FibonacciHeap
             //a node from root list has no parent
             brother.parent = null;
 
-
             while(buckets[brother.rank]!= null){
                 brother = link(brother, buckets[brother.rank]);
                 buckets[brother.rank-1] = null;
             }
+
             buckets[brother.rank] = brother;
 
         }
+        // all of the trees are now inside the buckets
         this.numOfTrees = 0;
+        this.min = null;
         return buckets;
     }
 
     public void fromBuckets(HeapNode[] buckets)
     {
-        this.min = null;
         for (HeapNode heap : buckets){
             if (heap != null){
                 this.numOfTrees++;
@@ -221,7 +225,7 @@ public class FibonacciHeap
      * Meld the heap with heap2
      *
      */
-    public void meld (FibonacciHeap heap2) //TODO should we make heap2 pointers same as this's?
+    public void meld (FibonacciHeap heap2)
     {
         // if one of the heaps is empty
         if (heap2.empty()){
@@ -235,13 +239,8 @@ public class FibonacciHeap
             return;
         }
 
-
         //link the two lists together
-        HeapNode minPrev = this.min.prev;
-        minPrev.next = heap2.min.next;
-        heap2.min.next.prev = minPrev;
-        this.min.prev = heap2.min;
-        heap2.min.next = this.min;
+        combineTwoLists(this.min, heap2.min);
 
         // update the fields
         if (heap2.min.key < this.min.key){
@@ -272,7 +271,6 @@ public class FibonacciHeap
      */
     public int[] countersRep()
     {
-        //TODO if empty or size == 1 ?
         if (this.empty()){
             return new int[0];
         }
@@ -342,7 +340,7 @@ public class FibonacciHeap
     public void decreaseKey(HeapNode x, int delta)
     {
         x.key -= delta;
-        if (x.parent == null || x.key > x.parent.key){ //TODO what should we do if they are equal?
+        if (x.parent == null || x.key >= x.parent.key){
             if (x.key < this.min.key){
                 this.min = x;
             }
@@ -434,7 +432,6 @@ public class FibonacciHeap
      */
     public class HeapNode{
 
-        public String info;
         public int key;
         public int rank;
         public boolean mark;
@@ -444,8 +441,7 @@ public class FibonacciHeap
         public HeapNode parent;
 
 
-        public HeapNode(String newInfo, int newKey){
-            this.info = newInfo;
+        public HeapNode(int newKey){
             this.key = newKey;
             this.next = this;
             this.prev = this;
@@ -459,7 +455,7 @@ public class FibonacciHeap
         }
 
         public String toString(){
-            return "(" + this.key + ", " + this.info + ")";
+            return "(" + this.key + ")";
         }
 
         public int getKey(){
