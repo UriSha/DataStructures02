@@ -1,4 +1,6 @@
+import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.Map;
 
 /**
  * FibonacciHeap
@@ -11,7 +13,6 @@ public class FibonacciHeap
     private int size;
     public int numOfMarked;
     public int numOfTrees;
-    private int[] counterRep = new int[42];
     public static int totalLinks;
     public static int totalCuts;
     /**
@@ -43,21 +44,13 @@ public class FibonacciHeap
             this.min = toBeInserted;
         }
         else {
-            // insert the new HeapNode 'behind' the minNode
-//            insertNodeToOthersList(toBeInserted, this.min);  //TODO what about if the Heap is empty?
-            insertNodeToOthersList002(toBeInserted, this.min);
-
-//        HeapNode minPrev = this.min.prev;
-//        minPrev.next = toBeInserted;
-//        toBeInserted.prev = minPrev;
-//        this.min.prev = toBeInserted;
-//        toBeInserted.next = this.min;
+            // insert the new HeapNode next to the minNode
+            insertNodeToOthersList(toBeInserted, this.min);
         }
 
         // update the relevant fields
         this.size++;
         this.numOfTrees++;
-        this.counterRep[0]++;
         if (toBeInserted.key < this.min.key){ //TODO what about duplicates?
             this.min = toBeInserted;
         }
@@ -70,15 +63,7 @@ public class FibonacciHeap
      * @pre node and other are both not null
      *
      */
-//    private void insertNodeToOthersList(HeapNode node, HeapNode other){
-//        HeapNode otherPrev = other.prev;
-//        otherPrev.next = node;
-//        node.prev = otherPrev;
-//        other.prev = node;
-//        node.next = other;
-//    }
-
-    private void insertNodeToOthersList002(HeapNode node, HeapNode other){
+    private void insertNodeToOthersList(HeapNode node, HeapNode other){
         HeapNode otherNext = other.next;
         otherNext.prev = node;
         node.next = otherNext;
@@ -91,43 +76,6 @@ public class FibonacciHeap
      * Delete the node containing the minimum key.
      *
      */
-//    public void deleteMin()
-//    {
-
-//        int tempNumOfTrees = this.min.rank;
-//        this.counterRep[this.min.rank]--;
-//        int[] tempCounterRep = new int[42];
-//
-//
-//        HeapNode childOfMin = this.min.child;
-//        HeapNode brother = childOfMin;
-//        HeapNode currentMin = childOfMin;
-//
-//
-//        do {
-//            if (brother.key < currentMin.key){
-//                currentMin = brother;
-//            }
-//            brother.parent = null;
-//            tempCounterRep[brother.rank]++;
-//            if (brother.mark){
-//                brother.mark = false;
-//                this.numOfMarked--;
-//            }
-//            brother = brother.next;
-//        }while (brother != childOfMin);
-//
-//        FibonacciHeap tempHeap = new FibonacciHeap();
-//        tempHeap.min = currentMin;
-////        tempHeap.size = 0;
-////        tempHeap.numOfMarked = 0;
-//        tempHeap.numOfTrees = tempNumOfTrees;
-//        tempHeap.counterRep = tempCounterRep;
-//
-//        this.meld((tempHeap)); //TODO we still didn't delete the min!!
-//
-////        this.successiveLinking();
-//    }
     public void deleteMin()
     {
         //Heap is empty
@@ -137,7 +85,6 @@ public class FibonacciHeap
             this.min = null;
             this.size--;
             this.numOfTrees--;
-            this.counterRep[0]--;
             return;
         }
 
@@ -194,7 +141,7 @@ public class FibonacciHeap
             big.prev = big;
         }
         else{
-            insertNodeToOthersList002(big, small.child);
+            insertNodeToOthersList(big, small.child);
         }
         big.parent = small;
         small.child = big;
@@ -234,7 +181,6 @@ public class FibonacciHeap
 
         }
         this.numOfTrees = 0;
-        this.counterRep = new int[42];
         return buckets;
     }
 
@@ -243,7 +189,6 @@ public class FibonacciHeap
         this.min = null;
         for (HeapNode heap : buckets){
             if (heap != null){
-                this.counterRep[heap.rank]++;
                 this.numOfTrees++;
                 if (this.min ==null){ //the first heap we find in buckets
                     this.min = heap;
@@ -251,7 +196,7 @@ public class FibonacciHeap
                     this.min.prev = this.min;
                 }
                 else {
-                    insertNodeToOthersList002(heap, this.min);
+                    insertNodeToOthersList(heap, this.min);
                     if (heap.key < this.min.key){
                         this.min = heap;
                     }
@@ -287,7 +232,6 @@ public class FibonacciHeap
             this.size = heap2.size;
             this.numOfMarked = heap2.numOfMarked;
             this.numOfTrees = heap2.numOfTrees;
-            this.counterRep = heap2.counterRep;
             return;
         }
 
@@ -307,9 +251,6 @@ public class FibonacciHeap
         this.size += heap2.size;
         this.numOfTrees += heap2.numOfTrees;
         this.numOfMarked += heap2.numOfMarked;
-        for (int i=0 ; i< this.counterRep.length ; i++){ //TODO is this counts as O(1)?
-            this.counterRep[i] += heap2.counterRep[i];
-        }
     }
 
     /**
@@ -331,9 +272,31 @@ public class FibonacciHeap
      */
     public int[] countersRep()
     {
-//        int[] arr = new int[42];
-//        return arr; //	 to be replaced by student code
-        return this.counterRep;
+        //TODO if empty or size == 1 ?
+        if (this.empty()){
+            return new int[0];
+        }
+
+        Map<Integer, Integer> ranksMap = new HashMap<>();
+        HeapNode currentNode = this.min.prev;
+        int maxRank = 0;
+        for (int i=0 ; i < numOfTrees ; i++){
+            currentNode = currentNode.next;
+            if (ranksMap.get(currentNode.rank)==null){
+                ranksMap.put(currentNode.rank, 1);
+            }
+            else {
+                ranksMap.put(currentNode.rank, ranksMap.get(currentNode.rank)+1);
+            }
+            if (maxRank < currentNode.rank){
+                maxRank = currentNode.rank;
+            }
+        }
+        int[] counterRep = new int[maxRank];
+        for (Integer rank : ranksMap.keySet()){
+            counterRep[rank] = ranksMap.get(rank);
+        }
+        return counterRep;
     }
 
     /**
@@ -349,8 +312,6 @@ public class FibonacciHeap
         this.size = 0;
         this.numOfTrees = 0;
         this.numOfMarked = 0;
-        this.counterRep = new int[42]; //TODO is this counts as O(1)?
-
         // for every int in the array, make it a new HeapNode and insert it to the heap
         for (int key : array){
             this.insert(key);
@@ -403,10 +364,6 @@ public class FibonacciHeap
                 cascadingCut(parent, parent.parent);
             }
         }
-        else { // the case where parent is the root of the current tree
-            this.counterRep[parent.rank]--;
-            this.counterRep[parent.rank-1]++;
-        }
     }
 
     private void cut(HeapNode child, HeapNode parent){
@@ -422,12 +379,11 @@ public class FibonacciHeap
             child.prev.next = child.next;
             child.next.prev = child.prev;
         }
-        insertNodeToOthersList002(child, this.min);
+        insertNodeToOthersList(child, this.min);
         if (child.key < this.min.key){
             this.min = child;
         }
         this.numOfTrees++;
-        this.counterRep[child.rank]++;
         totalCuts++;
     }
 
