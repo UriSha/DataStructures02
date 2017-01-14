@@ -5,6 +5,9 @@ import java.util.Map;
  * FibonacciHeap
  *
  * An implementation of fibonacci heap over non-negative integers.
+ *
+ *  Names: Guy Klien, Uri Shaham
+ *  User Names: guyklien1, urishaham
  */
 public class FibonacciHeap
 {
