@@ -9,8 +9,8 @@ public class FibonacciHeap
 {
     private HeapNode min;
     private int size;
-    public int numOfMarked; //TODO
-    public int numOfTrees;//TODO
+    public int numOfMarked;
+    public int numOfTrees;
     private int[] counterRep = new int[42];
     public static int totalLinks;
     public static int totalCuts;
@@ -44,7 +44,9 @@ public class FibonacciHeap
         }
         else {
             // insert the new HeapNode 'behind' the minNode
-            insertNodeToOthersList(toBeInserted, this.min);  //TODO what about if the Heap is empty?
+//            insertNodeToOthersList(toBeInserted, this.min);  //TODO what about if the Heap is empty?
+            insertNodeToOthersList002(toBeInserted, this.min);
+
 //        HeapNode minPrev = this.min.prev;
 //        minPrev.next = toBeInserted;
 //        toBeInserted.prev = minPrev;
@@ -68,12 +70,20 @@ public class FibonacciHeap
      * @pre node and other are both not null
      *
      */
-    private void insertNodeToOthersList(HeapNode node, HeapNode other){
-        HeapNode otherPrev = other.prev;
-        otherPrev.next = node;
-        node.prev = otherPrev;
-        other.prev = node;
-        node.next = other;
+//    private void insertNodeToOthersList(HeapNode node, HeapNode other){
+//        HeapNode otherPrev = other.prev;
+//        otherPrev.next = node;
+//        node.prev = otherPrev;
+//        other.prev = node;
+//        node.next = other;
+//    }
+
+    private void insertNodeToOthersList002(HeapNode node, HeapNode other){
+        HeapNode otherNext = other.next;
+        otherNext.prev = node;
+        node.next = otherNext;
+        other.next = node;
+        node.prev = other;
     }
     /**
      * public void deleteMin()
@@ -174,7 +184,7 @@ public class FibonacciHeap
      */
     public HeapNode link(HeapNode big, HeapNode small)
     {
-        if (big.key < small.key){ //TODO what about duplicates?
+        if (big.key < small.key){
             HeapNode temp = big;
             big = small;
             small = temp;
@@ -184,7 +194,7 @@ public class FibonacciHeap
             big.prev = big;
         }
         else{
-            insertNodeToOthersList(big, small.child);
+            insertNodeToOthersList002(big, small.child);
         }
         big.parent = small;
         small.child = big;
@@ -241,7 +251,7 @@ public class FibonacciHeap
                     this.min.prev = this.min;
                 }
                 else {
-                    insertNodeToOthersList(heap, this.min);
+                    insertNodeToOthersList002(heap, this.min);
                     if (heap.key < this.min.key){
                         this.min = heap;
                     }
@@ -412,7 +422,7 @@ public class FibonacciHeap
             child.prev.next = child.next;
             child.next.prev = child.prev;
         }
-        insertNodeToOthersList(child, this.min);
+        insertNodeToOthersList002(child, this.min);
         if (child.key < this.min.key){
             this.min = child;
         }

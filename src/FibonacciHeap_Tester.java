@@ -15,7 +15,7 @@ public class FibonacciHeap_Tester {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub//
-		testCase1();
+//		testCase1();
 		testCase2();
 		try {
 			writeExcel();
@@ -100,7 +100,7 @@ public class FibonacciHeap_Tester {
 					test_heap2.findMin().next.key));
 		}
 		System.out.println(test_heap.findMin());
-//		test_heap.delete(nodes_array[2]);
+		test_heap.delete(nodes_array[2]);
 		test_heap.delete(nodes_array[4]);
 		System.out.println("Test case 1 - Done! ");
 		
@@ -136,7 +136,7 @@ public class FibonacciHeap_Tester {
 				
 				int repeat = 1000;
 				FibonacciHeap test_heap = new FibonacciHeap();
-				for(int i=1; i<3;i++){
+				for(int i=1; i<=3;i++){
 					FibonacciHeap.totalCuts = 0;
 					FibonacciHeap.totalLinks = 0;
 					long startTime = System.currentTimeMillis();
