@@ -292,7 +292,7 @@ public class FibonacciHeap
                 maxRank = currentNode.rank;
             }
         }
-        int[] counterRep = new int[maxRank];
+        int[] counterRep = new int[maxRank+1];
         for (Integer rank : ranksMap.keySet()){
             counterRep[rank] = ranksMap.get(rank);
         }

@@ -1,3 +1,5 @@
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Random;
 
 
@@ -7,6 +9,8 @@ public class testF {
 	 public static void main(String [] args){
 	        sequence1();
 	        sequence2();
+//	        System.out.println(Integer.toBinaryString(500));
+
 	    }
 
 	    private static void sequence1(){
@@ -55,5 +59,6 @@ public class testF {
 	            System.out.println("Elapsed time was " + (stopTime - startTime) + " miliseconds.");
 	            FibonacciHeap.totalLinks = 0;
 	            FibonacciHeap.totalCuts = 0;
+				System.out.println("countersRep: "+ Arrays.toString(heap.countersRep()));
 	        }
 	    }}
