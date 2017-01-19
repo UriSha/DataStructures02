@@ -23,6 +23,7 @@ public class FibonacciHeapTester {
         fibHeap.deleteMin();
         fibHeap.deleteMin();
 
+
         System.out.println("numOfTrees: "+fibHeap.numOfTrees);
         System.out.println("numOfMarked: "+fibHeap.numOfMarked);
         System.out.println(fibHeap.findMin());

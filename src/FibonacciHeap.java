@@ -139,7 +139,6 @@ public class FibonacciHeap
     /**
      * public void link(HeapNode big, HeapNode small)
      *
-     * @pre big and small are both unmarked
      * @pre big and small are has the same rank
      * @return the HeapNode with the smaller key, with the other HeapNode as it's child
      *
@@ -379,6 +378,7 @@ public class FibonacciHeap
      * public void cascadingCut(HeapNode child, HeapNode parent)
      *
      * @pre child and parent are not null
+     * @pre child.key < parent.key
      */
     private void cascadingCut(HeapNode child, HeapNode parent){
         cut(child, parent);
